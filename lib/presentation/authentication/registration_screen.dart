@@ -69,6 +69,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         );
 
         if (!mounted) return;
+        AppConstans.showSnackBar(
+          context,
+          message: 'Successfully created account',
+        );
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -91,20 +95,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           );
         }
       } catch (e) {
-        setState(() {
-          _isLoading = false;
-        });
         AppConstans.showSnackBar(
           context,
           isSuccess: false,
           message: 'Something went wrong',
         );
       }
-
-      AppConstans.showSnackBar(
-        context,
-        message: 'Successfully created account',
-      );
 
       setState(() {
         _isLoading = false;
@@ -115,12 +111,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Account'),
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),

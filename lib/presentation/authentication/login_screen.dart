@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/presentation/authentication/registration_screen.dart';
+import 'package:todoeasy/presentation/home/dashboard_screen.dart';
+import 'package:todoeasy/utils/app_constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,6 +40,13 @@ class _LoginScreenState extends State<LoginScreen> {
     if (value == null || value.isEmpty) {
       return 'Password is required';
     }
+    final passwordRegex =
+        RegExp(r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$');
+
+    if (!passwordRegex.hasMatch(value)) {
+      return 'Password is invalid';
+    }
+
     return null;
   }
 
@@ -46,25 +56,45 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      // Simulate sign in process
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        final firebaseAuth = FirebaseAuth.instance;
+        // ignore: unused_local_variable
+        final userCredentials = await firebaseAuth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        if (!mounted) return;
+        AppConstans.showSnackBar(
+          context,
+          message: 'Successfully logged in',
+        );
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DashboardScreen(),
+          ),
+          (route) => false,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'invalid-credential') {
+          AppConstans.showSnackBar(
+            context,
+            isSuccess: false,
+            message: 'Incorrect email or password',
+          );
+        }
+      } catch (e) {
+        AppConstans.showSnackBar(
+          context,
+          isSuccess: false,
+          message: 'Something went wrong',
+        );
+      }
 
       setState(() {
         _isLoading = false;
       });
-
-      // Show success message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Sign in successful!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Navigate to home or main app screen
-        // Navigator.pushReplacementNamed(context, '/home');
-      }
     }
   }
 
