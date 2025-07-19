@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:todoeasy/presentation/home/dashboard_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
 
+/// 1. Create firebase auth instance
+/// 2. Create an user account using createUserWithEmailAndPassword method
+/// 3. Navigate to home screen once success, or show error message for failure.
+
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
