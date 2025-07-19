@@ -11,16 +11,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -39,19 +36,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (value == null || value.isEmpty) {
       return 'Password is required';
     }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-    return null;
-  }
+    final passwordRegex =
+        RegExp(r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$');
 
-  String? _validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+    if (!passwordRegex.hasMatch(value)) {
+      return 'Password is invalid';
     }
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
-    }
+
     return null;
   }
 
@@ -156,35 +147,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       onPressed: () {
                         setState(() {
                           _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                    ),
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Confirm password field
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: !_isConfirmPasswordVisible,
-                  textInputAction: TextInputAction.done,
-                  validator: _validateConfirmPassword,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    hintText: 'Confirm your password',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isConfirmPasswordVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isConfirmPasswordVisible =
-                              !_isConfirmPasswordVisible;
                         });
                       },
                     ),

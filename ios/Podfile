@@ -29,7 +29,7 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks!
-  use_modular_headers!
+  # use_modular_headers! - Disabled due to Firebase Auth compatibility issues
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
@@ -40,5 +40,41 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    
+    # Comprehensive Firebase Auth modular header fixes
+    target.build_configurations.each do |config|
+      # Allow non-modular includes in framework modules
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+      
+      # Additional compiler flags to handle Firebase Auth issues
+      config.build_settings['OTHER_CFLAGS'] ||= []
+      config.build_settings['OTHER_CFLAGS'] << '-Wno-non-modular-include-in-framework-module'
+      config.build_settings['OTHER_CFLAGS'] << '-Wno-quoted-include-in-framework-header'
+      config.build_settings['OTHER_CFLAGS'] << '-Wno-error=non-modular-include-in-framework-module'
+      
+      # Ensure all pods use iOS 13.0 as minimum deployment target
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      
+      # Disable nullability warnings for Firebase compatibility
+      config.build_settings['CLANG_WARN_NULLABLE_TO_NONNULL_CONVERSION'] = 'NO'
+      config.build_settings['CLANG_WARN_NULLABILITY_COMPLETENESS'] = 'NO'
+      
+      # Disable modular header error specifically for Firebase Auth
+      if target.name == 'firebase_auth'
+        config.build_settings['CLANG_WARN_NON_MODULAR_INCLUDE_IN_FRAMEWORK_MODULE'] = 'NO'
+        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+        config.build_settings['GCC_WARN_ABOUT_MISSING_NEWLINE'] = 'NO'
+      end
+    end
+  end
+  
+  # Additional fix to ensure all pods have the correct deployment target
+  installer.generated_projects.each do |project|
+    project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      end
+    end
   end
 end
