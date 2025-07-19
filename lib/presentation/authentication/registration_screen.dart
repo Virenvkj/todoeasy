@@ -69,11 +69,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         );
 
         if (!mounted) return;
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => const DashboardScreen(),
           ),
+          (route) => false,
         );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {

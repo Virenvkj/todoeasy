@@ -12,10 +12,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Create Account'),
+          title: const Text('Todo Easy'),
           elevation: 0,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+          automaticallyImplyLeading: false,
         ),
         body: SafeArea(
           child: Center(
