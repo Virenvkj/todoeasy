@@ -21,7 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         body: SafeArea(
           child: Center(
             child: Text(
-              'Join TodoEasy',
+              'Welcome',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
