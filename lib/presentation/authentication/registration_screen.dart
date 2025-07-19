@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todoeasy/presentation/home/dashboard_screen.dart';
+import 'package:todoeasy/utils/app_constants.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -52,25 +55,55 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         _isLoading = true;
       });
 
-      // Simulate registration process
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        final firebaseAuth = FirebaseAuth.instance;
+        // ignore: unused_local_variable
+        final userCredentials =
+            await firebaseAuth.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DashboardScreen(),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          AppConstans.showSnackBar(
+            context,
+            isSuccess: false,
+            message: 'The password provided is too weak.',
+          );
+        } else if (e.code == 'email-already-in-use') {
+          AppConstans.showSnackBar(
+            context,
+            isSuccess: false,
+            message: 'The account already exists for that email.',
+          );
+        }
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        AppConstans.showSnackBar(
+          context,
+          isSuccess: false,
+          message: 'Something went wrong',
+        );
+      }
+
+      AppConstans.showSnackBar(
+        context,
+        message: 'Successfully created account',
+      );
 
       setState(() {
         _isLoading = false;
       });
-
-      // Show success message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration successful!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Navigate back or to login screen
-        Navigator.pop(context);
-      }
     }
   }
 
