@@ -58,23 +58,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
       try {
         final firebaseAuth = FirebaseAuth.instance;
-        // ignore: unused_local_variable
-        final userCredentials = await firebaseAuth.signInWithEmailAndPassword(
+        await firebaseAuth.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
         if (!mounted) return;
-        AppConstans.showSnackBar(
-          context,
-          message: 'Successfully logged in',
-        );
-        Navigator.pushAndRemoveUntil(
-          context,
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const DashboardScreen(),
           ),
-          (route) => false,
+          (_) => false,
+        );
+
+        AppConstans.showSnackBar(
+          context,
+          message: 'Login successful',
+          isSuccess: true,
         );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'invalid-credential') {
@@ -83,12 +83,18 @@ class _LoginScreenState extends State<LoginScreen> {
             isSuccess: false,
             message: 'Incorrect email or password',
           );
+        } else {
+          AppConstans.showSnackBar(
+            context,
+            isSuccess: false,
+            message: e.toString(),
+          );
         }
       } catch (e) {
         AppConstans.showSnackBar(
           context,
+          message: e.toString(),
           isSuccess: false,
-          message: 'Something went wrong',
         );
       }
 

@@ -33,9 +33,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       return 'Email is required';
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
+
+    if (!emailRegex.hasMatch(value)) {}
     return null;
   }
 
@@ -61,44 +60,43 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
       try {
         final firebaseAuth = FirebaseAuth.instance;
-        // ignore: unused_local_variable
-        final userCredentials =
-            await firebaseAuth.createUserWithEmailAndPassword(
+        await firebaseAuth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
         if (!mounted) return;
-        AppConstans.showSnackBar(
-          context,
-          message: 'Successfully created account',
-        );
-        Navigator.pushAndRemoveUntil(
-          context,
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const DashboardScreen(),
           ),
-          (route) => false,
+          (_) => false,
+        );
+
+        AppConstans.showSnackBar(
+          context,
+          message: 'Account creation successful',
+          isSuccess: true,
         );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           AppConstans.showSnackBar(
             context,
+            message: 'Password is too weak',
             isSuccess: false,
-            message: 'The password provided is too weak.',
           );
         } else if (e.code == 'email-already-in-use') {
           AppConstans.showSnackBar(
             context,
+            message: 'Email already in use',
             isSuccess: false,
-            message: 'The account already exists for that email.',
           );
         }
-      } catch (e) {
+      } catch (error) {
         AppConstans.showSnackBar(
           context,
+          message: error.toString(),
           isSuccess: false,
-          message: 'Something went wrong',
         );
       }
 
