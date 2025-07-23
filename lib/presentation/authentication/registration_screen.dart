@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todoeasy/models/user_details.dart';
 import 'package:todoeasy/presentation/home/dashboard_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
 
@@ -52,6 +54,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return null;
   }
 
+  Future<void> _storeUserData({
+    required UserDetails userDetails,
+  }) async {
+    final firestore = FirebaseFirestore.instance;
+    await firestore.collection('/users').add(userDetails.toJson());
+  }
+
   Future<void> _handleRegistration() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -60,9 +69,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
       try {
         final firebaseAuth = FirebaseAuth.instance;
-        await firebaseAuth.createUserWithEmailAndPassword(
+        final userCredentials =
+            await firebaseAuth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
+        );
+
+        if (userCredentials.user == null) {
+          throw Exception('Somethign went wrong');
+        }
+
+        await _storeUserData(
+          userDetails: UserDetails(
+            uid: userCredentials.user!.uid,
+            email: userCredentials.user!.email ?? _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          ),
         );
 
         if (!mounted) return;
