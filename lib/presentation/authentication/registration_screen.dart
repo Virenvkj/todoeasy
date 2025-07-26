@@ -2,12 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/models/user_details.dart';
-import 'package:todoeasy/presentation/home/dashboard_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
-
-/// 1. Create firebase auth instance
-/// 2. Create an user account using createUserWithEmailAndPassword method
-/// 3. Navigate to home screen once success, or show error message for failure.
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -36,7 +31,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-    if (!emailRegex.hasMatch(value)) {}
+    if (!emailRegex.hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
     return null;
   }
 
@@ -44,11 +41,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (value == null || value.isEmpty) {
       return 'Password is required';
     }
-    final passwordRegex =
-        RegExp(r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$');
-
+    
+    // Check minimum length
+    if (value.length < 12) {
+      return 'Password must be at least 12 characters long';
+    }
+    
+    // Regular expression to check:
+    // - At least one uppercase letter (?=.*[A-Z])
+    // - At least one special character (?=.*[!@#$%^&*(),.?":{}|<>])
+    // - Minimum 12 characters {12,}
+    final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$');
+    
     if (!passwordRegex.hasMatch(value)) {
-      return 'Password is invalid';
+      if (!RegExp(r'[A-Z]').hasMatch(value)) {
+        return 'Password must contain at least one uppercase letter';
+      }
+      if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+        return 'Password must contain at least one special character';
+      }
     }
 
     return null;
@@ -88,12 +99,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         );
 
         if (!mounted) return;
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const DashboardScreen(),
-          ),
-          (_) => false,
-        );
 
         AppConstans.showSnackBar(
           context,

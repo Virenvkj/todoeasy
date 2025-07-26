@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/firebase_options.dart';
-import 'package:todoeasy/presentation/authentication/login_screen.dart';
+import 'package:todoeasy/future_ex.dart';
+import 'package:todoeasy/presentation/authentication/auth_check.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const FutureEx(),
     );
   }
 }
