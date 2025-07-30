@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/firebase_options.dart';
-import 'package:todoeasy/future_ex.dart';
-import 'package:todoeasy/presentation/authentication/auth_check.dart';
+import 'package:todoeasy/presentation/authentication/login_screen.dart';
+import 'package:todoeasy/presentation/home/dashboard_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const FutureEx(),
+      home: FirebaseAuth.instance.currentUser != null
+          ? const DashboardScreen()
+          : const LoginScreen(),
     );
   }
 }

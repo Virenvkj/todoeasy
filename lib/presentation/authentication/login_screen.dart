@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/presentation/authentication/registration_screen.dart';
+import 'package:todoeasy/presentation/home/dashboard_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -63,7 +64,12 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (!mounted) return;
-        
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const DashboardScreen(),
+            ),
+            (route) => false);
+
         AppConstans.showSnackBar(
           context,
           message: 'Login successful',

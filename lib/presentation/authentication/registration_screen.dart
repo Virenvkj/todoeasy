@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/models/user_details.dart';
+import 'package:todoeasy/presentation/home/dashboard_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
+import 'package:todoeasy/utils/firestore_collections.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -41,18 +43,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (value == null || value.isEmpty) {
       return 'Password is required';
     }
-    
     // Check minimum length
-    if (value.length < 12) {
-      return 'Password must be at least 12 characters long';
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
     }
-    
+
     // Regular expression to check:
     // - At least one uppercase letter (?=.*[A-Z])
     // - At least one special character (?=.*[!@#$%^&*(),.?":{}|<>])
-    // - Minimum 12 characters {12,}
-    final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$');
-    
+    // - Minimum 6 characters {6,}
+    final passwordRegex =
+        RegExp(r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$');
+
     if (!passwordRegex.hasMatch(value)) {
       if (!RegExp(r'[A-Z]').hasMatch(value)) {
         return 'Password must contain at least one uppercase letter';
@@ -69,7 +71,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     required UserDetails userDetails,
   }) async {
     final firestore = FirebaseFirestore.instance;
-    await firestore.collection('/users').add(userDetails.toJson());
+    await firestore
+        .collection(FirestoreCollections.userCollection)
+        .doc(userDetails.uid)
+        .set(
+          userDetails.toJson(),
+        );
   }
 
   Future<void> _handleRegistration() async {
@@ -99,6 +106,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         );
 
         if (!mounted) return;
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const DashboardScreen(),
+          ),
+          (route) => false,
+        );
 
         AppConstans.showSnackBar(
           context,

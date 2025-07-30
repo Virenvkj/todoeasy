@@ -1,35 +1,69 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todoeasy/presentation/authentication/login_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
+import 'package:todoeasy/utils/firestore_collections.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
-  Future<void> _handleLogout(BuildContext context) async {
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Future<void> fetchUserProfile() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) await _logout();
+
+    // final userProfile = await FirebaseFirestore.instance
+    //     .collection(
+    //       FirestoreCollections.userCollection,
+    //     )
+    //     .where('email', isEqualTo: currentUser!.email)
+    //     .get();
+
+    final userProfile = await FirebaseFirestore.instance
+        .collection(FirestoreCollections.userCollection)
+        .doc(currentUser!.uid)
+        .get();
+
+    print(
+      userProfile.data(),
+    );
+  }
+
+  Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-      if (context.mounted) {
-        AppConstans.showSnackBar(
-          context,
-          message: 'Logged out successfully',
-          isSuccess: true,
-        );
-      }
+
+      if (!mounted) return;
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+          (route) => false);
     } catch (e) {
-      if (context.mounted) {
-        AppConstans.showSnackBar(
-          context,
-          message: 'Error logging out: ${e.toString()}',
-          isSuccess: false,
-        );
-      }
+      if (!mounted) return;
+      AppConstans.showSnackBar(
+        isSuccess: false,
+        context,
+        message: 'Error logging out',
+      );
     }
+  }
+
+  @override
+  void initState() {
+    fetchUserProfile();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -37,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 40),
-            
+
             // User Avatar
             CircleAvatar(
               radius: 50,
@@ -48,82 +82,35 @@ class ProfileScreen extends StatelessWidget {
                 color: Colors.deepPurple.shade400,
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // User Email
             Text(
               user?.email ?? 'No email',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             Text(
               'Welcome to TodoEasy',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 60),
-            
-            // Profile Options
-            _buildProfileOption(
-              context,
-              icon: Icons.person_outline,
-              title: 'Account Settings',
-              onTap: () {
-                // TODO: Navigate to account settings
-                AppConstans.showSnackBar(
-                  context,
-                  message: 'Account settings coming soon',
-                  isSuccess: true,
-                );
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            _buildProfileOption(
-              context,
-              icon: Icons.notifications_none_outlined,
-              title: 'Notifications',
-              onTap: () {
-                // TODO: Navigate to notifications settings
-                AppConstans.showSnackBar(
-                  context,
-                  message: 'Notification settings coming soon',
-                  isSuccess: true,
-                );
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            _buildProfileOption(
-              context,
-              icon: Icons.help_outline,
-              title: 'Help & Support',
-              onTap: () {
-                // TODO: Navigate to help
-                AppConstans.showSnackBar(
-                  context,
-                  message: 'Help & Support coming soon',
-                  isSuccess: true,
-                );
-              },
-            ),
-            
+
             const Spacer(),
-            
+
             // Logout Button
             ElevatedButton(
-              onPressed: () => _handleLogout(context),
+              onPressed: () async => _logout(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -145,47 +132,8 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-  
-  Widget _buildProfileOption(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: Colors.deepPurple.shade400,
-              size: 24,
-            ),
-            const SizedBox(width: 16),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const Spacer(),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey.shade400,
-              size: 16,
-            ),
           ],
         ),
       ),
