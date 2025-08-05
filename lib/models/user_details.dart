@@ -35,4 +35,25 @@ class UserDetails {
         "firstName": firstName,
         "lastName": lastName,
       };
+
+  Map<String, dynamic> profileNameToJson() => {
+        "firstName": firstName,
+        "lastName": lastName,
+      };
+
+  UserDetails copyWith({
+    String? uid,
+    String? email,
+    String? password,
+    String? firstName,
+    String? lastName,
+  }) {
+    return UserDetails(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+    );
+  }
 }
