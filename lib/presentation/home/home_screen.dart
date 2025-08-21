@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/models/task_details.dart';
+import 'package:todoeasy/utils/firestore_collections.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,6 +13,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<TaskDetails> _tasks = [];
+  bool isLoading = false;
+
+  Future<void> fetchAllTasksOptimised() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final todoSnap = await FirebaseFirestore.instance
+        .collection(FirestoreCollections.todoListCollection)
+        .doc(uid)
+        .collection(FirestoreCollections.todosCollection)
+        .get();
+
+    final todos = todoSnap.docs;
+
+    todos
+        .map((element) => _tasks.add(TaskDetails.fromJson(element.data())))
+        .toList();
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   void _showAddTaskDialog() {
     final titleController = TextEditingController();
@@ -46,14 +74,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               final title = titleController.text.trim();
               final desc = descController.text.trim();
               if (title.isNotEmpty) {
+                final newTask = TaskDetails(title: title, description: desc);
                 setState(() {
-                  _tasks.add(TaskDetails(title: title, description: desc));
+                  _tasks.add(newTask);
                 });
                 Navigator.pop(context);
+                await createNewTask(newTask);
               }
             },
             child: const Text('Add'),
@@ -61,6 +91,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> createNewTask(TaskDetails task) async {
+    final firestore = FirebaseFirestore.instance;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    await firestore
+        .collection(FirestoreCollections.todoListCollection)
+        .doc(uid)
+        .collection(
+          FirestoreCollections.todosCollection,
+        )
+        .add(task.toJson());
   }
 
   void _deleteTask(int index) {
@@ -88,60 +130,71 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    fetchAllTasksOptimised();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: _tasks.isEmpty
-            ? Center(
-                child: Text(
-                  'No tasks yet.\nTap + to add your first task!',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                ),
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
               )
-            : ListView.separated(
-                padding: const EdgeInsets.all(16),
-                itemCount: _tasks.length,
-                separatorBuilder: (context, _) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final task = _tasks[index];
-                  return Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+            : _tasks.isEmpty
+                ? Center(
+                    child: Text(
+                      'No tasks yet.\nTap + to add your first task!',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.grey[600],
+                          ),
                     ),
-                    child: ListTile(
-                      leading: Checkbox(
-                        value: task.isDone,
-                        onChanged: (value) {
-                          setState(() {
-                            task.isDone = value ?? false;
-                          });
-                        },
-                      ),
-                      title: Text(
-                        task.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: task.description.isNotEmpty
-                          ? Text(task.description)
-                          : null,
-                      onTap: () => _showTaskDetails(task),
-                      trailing: IconButton(
-                        icon:
-                            const Icon(Icons.delete_outline, color: Colors.red),
-                        onPressed: () => _deleteTask(index),
-                        tooltip: 'Delete',
-                      ),
-                    ),
-                  );
-                },
-              ),
+                  )
+                : ListView.separated(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _tasks.length,
+                    separatorBuilder: (context, _) =>
+                        const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final task = _tasks[index];
+                      return Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ListTile(
+                          leading: Checkbox(
+                            value: task.isDone,
+                            onChanged: (value) {
+                              setState(() {
+                                task.isDone = value ?? false;
+                              });
+                            },
+                          ),
+                          title: Text(
+                            task.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: task.description.isNotEmpty
+                              ? Text(task.description)
+                              : null,
+                          onTap: () => _showTaskDetails(task),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_outline,
+                                color: Colors.red),
+                            onPressed: () => _deleteTask(index),
+                            tooltip: 'Delete',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddTaskDialog,

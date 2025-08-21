@@ -77,6 +77,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .set(
           userDetails.toJson(),
         );
+
+    await firestore
+        .collection(FirestoreCollections.todoListCollection)
+        .doc(userDetails.uid)
+        .set({});
   }
 
   Future<void> _handleRegistration() async {

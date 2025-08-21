@@ -5,6 +5,7 @@ import 'package:todoeasy/models/user_details.dart';
 import 'package:todoeasy/presentation/authentication/login_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
 import 'package:todoeasy/utils/firestore_collections.dart';
+import 'package:todoeasy/widgets/logout_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -145,14 +146,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CircularProgressIndicator(),
               )
             : currentUserDetails == null
-                ? const Center(
-                    child: Text('No details found'),
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text('No details found'),
+                        LogoutCta(
+                          onLogout: () async => _logout(),
+                        ),
+                      ],
+                    ),
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 40),
-
                       CircleAvatar(
                         radius: 50,
                         backgroundColor: Colors.deepPurple.shade100,
@@ -162,9 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.deepPurple.shade400,
                         ),
                       ),
-
                       const SizedBox(height: 20),
-
                       Text(
                         currentUserDetails?.email ?? 'No email',
                         style:
@@ -173,9 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                         textAlign: TextAlign.center,
                       ),
-
                       const SizedBox(height: 8),
-
                       Text(
                         'Welcome to TodoEasy',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -183,9 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                         textAlign: TextAlign.center,
                       ),
-
                       const SizedBox(height: 60),
-
                       Form(
                         key: _formKey,
                         child: Column(
@@ -275,34 +277,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-
                       const Spacer(),
 
-                      // Logout Button
-                      ElevatedButton(
-                        onPressed: () async => _logout(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          minimumSize: const Size(double.infinity, 50),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.logout),
-                            SizedBox(width: 8),
-                            Text(
-                              'Logout',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
+                      //Logout CTA
+                      LogoutCta(
+                        onLogout: () async => _logout(),
                       ),
-
                       const SizedBox(height: 20),
                     ],
                   ),
