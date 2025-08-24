@@ -29,6 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: kToolbarHeight + 30,
         backgroundColor: Colors.deepPurple.shade50,
         elevation: 0,
         title: const Text(

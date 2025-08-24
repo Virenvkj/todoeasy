@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todoeasy/models/task_details.dart';
+import 'package:todoeasy/utils/app_constants.dart';
 import 'package:todoeasy/utils/firestore_collections.dart';
+import 'package:uuid/uuid.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,18 +16,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<TaskDetails> _tasks = [];
   bool isLoading = false;
+  final firestore = FirebaseFirestore.instance;
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  final uuid = const Uuid();
 
   Future<void> fetchAllTasksOptimised() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-
     setState(() {
       isLoading = true;
     });
 
-    final todoSnap = await FirebaseFirestore.instance
+    final todoSnap = await firestore
         .collection(FirestoreCollections.todoListCollection)
         .doc(uid)
         .collection(FirestoreCollections.todosCollection)
+        .where('isDone', isEqualTo: false)
         .get();
 
     final todos = todoSnap.docs;
@@ -78,7 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
               final title = titleController.text.trim();
               final desc = descController.text.trim();
               if (title.isNotEmpty) {
-                final newTask = TaskDetails(title: title, description: desc);
+                final newTask = TaskDetails(
+                  title: title,
+                  description: desc,
+                  id: uuid.v1(),
+                );
                 setState(() {
                   _tasks.add(newTask);
                 });
@@ -93,16 +101,30 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> createNewTask(TaskDetails task) async {
-    final firestore = FirebaseFirestore.instance;
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+  Future<void> markAsCompleted(TaskDetails task) async {
     await firestore
         .collection(FirestoreCollections.todoListCollection)
         .doc(uid)
-        .collection(
-          FirestoreCollections.todosCollection,
-        )
-        .add(task.toJson());
+        .collection(FirestoreCollections.todosCollection)
+        .doc(task.id)
+        .update({
+      "isDone": true,
+    }).then((value) {
+      AppConstans.showSnackBar(
+        context,
+        isSuccess: true,
+        message: 'Voila, your task is marked as done !',
+      );
+    });
+  }
+
+  Future<void> createNewTask(TaskDetails task) async {
+    await firestore
+        .collection(FirestoreCollections.todoListCollection)
+        .doc(uid)
+        .collection(FirestoreCollections.todosCollection)
+        .doc(task.id)
+        .set(task.toJson());
   }
 
   void _deleteTask(int index) {
@@ -168,9 +190,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           leading: Checkbox(
                             value: task.isDone,
-                            onChanged: (value) {
+                            onChanged: (value) async {
+                              await markAsCompleted(task);
                               setState(() {
-                                task.isDone = value ?? false;
+                                _tasks.remove(task);
                               });
                             },
                           ),
