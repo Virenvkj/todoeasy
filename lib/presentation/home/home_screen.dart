@@ -127,7 +127,17 @@ class _HomeScreenState extends State<HomeScreen> {
         .set(task.toJson());
   }
 
-  void _deleteTask(int index) {
+  Future<void> _deleteTask({
+    required int index,
+    required String taskId,
+  }) async {
+    await firestore
+        .collection(FirestoreCollections.todoListCollection)
+        .doc(uid)
+        .collection(FirestoreCollections.todosCollection)
+        .doc(taskId)
+        .delete();
+
     setState(() {
       _tasks.removeAt(index);
     });
@@ -211,7 +221,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           trailing: IconButton(
                             icon: const Icon(Icons.delete_outline,
                                 color: Colors.red),
-                            onPressed: () => _deleteTask(index),
+                            onPressed: () => _deleteTask(
+                              index: index,
+                              taskId: task.id,
+                            ),
                             tooltip: 'Delete',
                           ),
                         ),
