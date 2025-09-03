@@ -7,26 +7,28 @@ String userDetailsToJson(UserDetails data) => json.encode(data.toJson());
 
 class UserDetails {
   final String uid;
-  final String email;
-  final String password;
+  String? email;
+  String? password;
   String? firstName;
   String? lastName;
+  bool isGuest;
 
   UserDetails({
     required this.uid,
-    required this.email,
-    required this.password,
+    this.email,
+    this.password,
     this.firstName,
     this.lastName,
+    this.isGuest = false,
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json) => UserDetails(
-        uid: json["uid"],
-        email: json["email"],
-        password: json["password"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
-      );
+      uid: json["uid"],
+      email: json["email"],
+      password: json["password"],
+      firstName: json["firstName"],
+      lastName: json["lastName"],
+      isGuest: json["isGuest"]);
 
   Map<String, dynamic> toJson() => {
         "uid": uid,
@@ -34,6 +36,7 @@ class UserDetails {
         "password": password,
         "firstName": firstName,
         "lastName": lastName,
+        "isGuest": isGuest,
       };
 
   Map<String, dynamic> profileNameToJson() => {
@@ -47,6 +50,7 @@ class UserDetails {
     String? password,
     String? firstName,
     String? lastName,
+    bool? isGuest,
   }) {
     return UserDetails(
       uid: uid ?? this.uid,
@@ -54,6 +58,7 @@ class UserDetails {
       password: password ?? this.password,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
+      isGuest: isGuest ?? this.isGuest,
     );
   }
 }

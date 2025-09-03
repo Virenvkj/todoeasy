@@ -84,6 +84,53 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .set({});
   }
 
+  Future<void> _signInAsGuest() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final firebaseAuth = FirebaseAuth.instance;
+      final userCredentials = await firebaseAuth.signInAnonymously();
+
+      if (userCredentials.user == null) {
+        throw Exception('Somethign went wrong');
+      }
+
+      await _storeUserData(
+        userDetails: UserDetails(
+          uid: userCredentials.user!.uid,
+          isGuest: true,
+        ),
+      );
+
+      if (!mounted) return;
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+        ),
+        (route) => false,
+      );
+
+      AppConstans.showSnackBar(
+        context,
+        message: 'Account creation successful',
+        isSuccess: true,
+      );
+    } catch (error) {
+      AppConstans.showSnackBar(
+        context,
+        message: error.toString(),
+        isSuccess: false,
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   Future<void> _handleRegistration() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -245,6 +292,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         )
                       : const Text(
                           'Create Account',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Guest button
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _signInAsGuest,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text(
+                          'Enter as Guest',
                           style: TextStyle(fontSize: 16),
                         ),
                 ),
