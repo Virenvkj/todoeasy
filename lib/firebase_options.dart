@@ -55,6 +55,12 @@ class DefaultFirebaseOptions {
     messagingSenderId: '498694689943',
     projectId: 'todoist-88b0e',
     storageBucket: 'todoist-88b0e.firebasestorage.app',
+    androidClientId:
+        '498694689943-40h98qpqjln5chtfvmrg5f6ibv52vs30.apps.googleusercontent.com',
+    iosClientId:
+        '498694689943-m2h0lae8hob5l2g95bjkeg047k69nb5u.apps.googleusercontent.com',
+    iosBundleId: 'com.example.todoist',
+    
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -63,6 +69,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '498694689943',
     projectId: 'todoist-88b0e',
     storageBucket: 'todoist-88b0e.firebasestorage.app',
+    androidClientId:
+        '498694689943-40h98qpqjln5chtfvmrg5f6ibv52vs30.apps.googleusercontent.com',
+    iosClientId:
+        '498694689943-m2h0lae8hob5l2g95bjkeg047k69nb5u.apps.googleusercontent.com',
     iosBundleId: 'com.example.todoist',
   );
 }
