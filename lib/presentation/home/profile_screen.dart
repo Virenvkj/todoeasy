@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:todoeasy/models/user_details.dart';
 import 'package:todoeasy/presentation/authentication/login_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
@@ -21,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   final currentUser = FirebaseAuth.instance.currentUser;
+  final googleSignIn = GoogleSignIn();
 
   Future<void> fetchUserProfile() async {
     setState(() {
@@ -51,36 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  /// Approch #1
-  // Future<void> _saveProfile() async {
-  //   final firestore = FirebaseFirestore.instance;
-
-  //   await firestore
-  //       .collection(FirestoreCollections.userCollection)
-  //       .doc(currentUser?.uid)
-  //       .update({
-  //         'firstName' : firstNameController.text.trim(),
-  //         'lastName' : lastNameController.text.trim(),
-  //       });
-  // }
-
-  /// Approach #2
-  // Future<void> _saveProfile() async {
-  //   final firestore = FirebaseFirestore.instance;
-  //   final newUserProfile = currentUserDetails?.copyWith(
-  //     firstName: firstNameController.text.trim(),
-  //     lastName: lastNameController.text.trim(),
-  //   );
-
-  //   if (newUserProfile == null) return;
-
-  //   await firestore
-  //       .collection(FirestoreCollections.userCollection)
-  //       .doc(currentUser?.uid)
-  //       .update(newUserProfile.profileNameToJson());
-  // }
-
-  /// Approach #3
   Future<void> _saveProfile() async {
     setState(() {
       _isLoading = true;
@@ -108,6 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
+      await googleSignIn.signOut();
 
       if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
