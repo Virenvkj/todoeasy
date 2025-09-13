@@ -37,3 +37,12 @@ Future<void> setupFlutterNotifications() async {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await setupFlutterNotifications();
 }
+
+/// Notifications setup
+/// 1. Install permissions_handler
+/// 2. Request for notification permissions
+/// 3. Install firebase_messaging
+/// 4. Setup background notification handler functions
+/// 4. Setup campaign on firebase
+/// 5. Get the FCM token
+/// 6. Make a test using firebase campaign
