@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:todoeasy/presentation/authentication/registration_screen.dart';
-import 'package:todoeasy/presentation/home/home_screen.dart';
+import 'package:todoeasy/presentation/home/dashboard_screen.dart';
 import 'package:todoeasy/utils/app_constants.dart';
 import 'package:todoeasy/utils/firestore_collections.dart';
 
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const DashboardScreen(),
         ),
       );
     } catch (e) {
