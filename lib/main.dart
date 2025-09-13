@@ -14,11 +14,10 @@ Future main() async {
 
   await requestNotificationPermission();
 
-  FirebaseMessaging.onBackgroundMessage((message) async {
-    if (!kIsWeb) {
-      await setupFlutterNotifications();
-    }
-  });
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  if (!kIsWeb) {
+    await setupFlutterNotifications();
+  }
 
   runApp(const MyApp());
 }
@@ -33,4 +32,8 @@ Future<void> setupFlutterNotifications() async {
     badge: true,
     sound: true,
   );
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await setupFlutterNotifications();
 }
