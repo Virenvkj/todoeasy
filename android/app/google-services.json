@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:498694689943:android:db81e103b7418de6df05d2",
         "android_client_info": {
-          "package_name": "com.example.todoeasy"
+          "package_name": "com.viren.todoeasy"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "498694689943-dotb27t70u22gq1jnnus7hprc8qf9ra0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.todoeasy"
+                "bundle_id": "com.viren.todoeasy"
               }
             }
           ]
@@ -45,7 +45,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:498694689943:android:895d956fa956a072df05d2",
         "android_client_info": {
-          "package_name": "com.example.todoist"
+          "package_name": "com.viren.todoist"
         }
       },
       "oauth_client": [
@@ -53,7 +53,7 @@
           "client_id": "498694689943-40h98qpqjln5chtfvmrg5f6ibv52vs30.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.todoist",
+            "package_name": "com.viren.todoist",
             "certificate_hash": "698650bf688a7b9b7870511d7d4a30d0a32e23e5"
           }
         },
@@ -78,7 +78,7 @@
               "client_id": "498694689943-dotb27t70u22gq1jnnus7hprc8qf9ra0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.todoeasy"
+                "bundle_id": "com.viren.todoeasy"
               }
             }
           ]

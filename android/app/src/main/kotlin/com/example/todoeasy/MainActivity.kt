@@ -1,4 +1,4 @@
-package com.example.todoeasy
+package com.viren.todoeasy
 
 import io.flutter.embedding.android.FlutterActivity
 
