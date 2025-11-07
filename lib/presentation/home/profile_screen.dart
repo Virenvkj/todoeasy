@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   final currentUser = FirebaseAuth.instance.currentUser;
-  final googleSignIn = GoogleSignIn();
+  final googleSignIn = GoogleSignIn.instance;
 
   Future<void> fetchUserProfile() async {
     setState(() {

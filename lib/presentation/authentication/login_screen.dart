@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordVisible = false;
   bool _isLoading = false;
   final firebaseAuth = FirebaseAuth.instance;
-  final googleSignIn = GoogleSignIn();
+  final googleSignIn = GoogleSignIn.instance;
 
   @override
   void dispose() {
@@ -63,19 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final googleUser = await googleSignIn.signIn();
+      final googleUser = await googleSignIn.authenticate();
 
-      if (googleUser == null) {
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-
-      final googleAuth = await googleUser.authentication;
+      final googleAuth = googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
