@@ -63,6 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      await googleSignIn.initialize();
+
       final googleUser = await googleSignIn.authenticate();
 
       final googleAuth = googleUser.authentication;
