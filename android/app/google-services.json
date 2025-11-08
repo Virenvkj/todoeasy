@@ -1,87 +1,26 @@
 {
   "project_info": {
-    "project_number": "498694689943",
-    "project_id": "todoist-88b0e",
-    "storage_bucket": "todoist-88b0e.firebasestorage.app"
+    "project_number": "528358178403",
+    "project_id": "todoeasy-95dd4",
+    "storage_bucket": "todoeasy-95dd4.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:498694689943:android:db81e103b7418de6df05d2",
-        "android_client_info": {
-          "package_name": "com.viren.todoeasy"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "498694689943-sgs3d71il6snjg6f7eveu5vg3ci7us31.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDOJuDrfq1AvhU4Crnl12FUvC9FhrK93ho"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "498694689943-sgs3d71il6snjg6f7eveu5vg3ci7us31.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "498694689943-dotb27t70u22gq1jnnus7hprc8qf9ra0.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.viren.todoeasy"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:498694689943:android:895d956fa956a072df05d2",
+        "mobilesdk_app_id": "1:528358178403:android:5a425866aef6ad16e7c256",
         "android_client_info": {
           "package_name": "com.viren.todoist"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "498694689943-40h98qpqjln5chtfvmrg5f6ibv52vs30.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.viren.todoist",
-            "certificate_hash": "698650bf688a7b9b7870511d7d4a30d0a32e23e5"
-          }
-        },
-        {
-          "client_id": "498694689943-sgs3d71il6snjg6f7eveu5vg3ci7us31.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDOJuDrfq1AvhU4Crnl12FUvC9FhrK93ho"
+          "current_key": "AIzaSyCiAOX34lyZ9o05BEmPL3W14v4QuUY53RQ"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "498694689943-sgs3d71il6snjg6f7eveu5vg3ci7us31.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "498694689943-dotb27t70u22gq1jnnus7hprc8qf9ra0.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.viren.todoeasy"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

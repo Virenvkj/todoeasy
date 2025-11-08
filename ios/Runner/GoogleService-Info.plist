@@ -2,24 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>498694689943-dotb27t70u22gq1jnnus7hprc8qf9ra0.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.498694689943-dotb27t70u22gq1jnnus7hprc8qf9ra0</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>498694689943-40h98qpqjln5chtfvmrg5f6ibv52vs30.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCL2YipXpxmt6n1bmHJ3ZJGNF5ZE8yABiQ</string>
+	<string>AIzaSyDo4e8160N0a3b7SD9Z60e_fwEUz06yifM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>498694689943</string>
+	<string>528358178403</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.viren.todoeasy</string>
 	<key>PROJECT_ID</key>
-	<string>todoist-88b0e</string>
+	<string>todoeasy-95dd4</string>
 	<key>STORAGE_BUCKET</key>
-	<string>todoist-88b0e.firebasestorage.app</string>
+	<string>todoeasy-95dd4.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:498694689943:ios:fe3634590cdd7c2edf05d2</string>
+	<string>1:528358178403:ios:61d190211200695ce7c256</string>
 </dict>
 </plist>

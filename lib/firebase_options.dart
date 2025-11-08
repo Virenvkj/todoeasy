@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -50,29 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDOJuDrfq1AvhU4Crnl12FUvC9FhrK93ho',
-    appId: '1:498694689943:android:895d956fa956a072df05d2',
-    messagingSenderId: '498694689943',
-    projectId: 'todoist-88b0e',
-    storageBucket: 'todoist-88b0e.firebasestorage.app',
-    androidClientId:
-        '498694689943-40h98qpqjln5chtfvmrg5f6ibv52vs30.apps.googleusercontent.com',
-    iosClientId:
-        '498694689943-m2h0lae8hob5l2g95bjkeg047k69nb5u.apps.googleusercontent.com',
-    iosBundleId: 'com.viren.todoist',
-    
+    apiKey: 'AIzaSyCiAOX34lyZ9o05BEmPL3W14v4QuUY53RQ',
+    appId: '1:528358178403:android:5a425866aef6ad16e7c256',
+    messagingSenderId: '528358178403',
+    projectId: 'todoeasy-95dd4',
+    storageBucket: 'todoeasy-95dd4.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCL2YipXpxmt6n1bmHJ3ZJGNF5ZE8yABiQ',
-    appId: '1:498694689943:ios:f15a705574c90c7cdf05d2',
-    messagingSenderId: '498694689943',
-    projectId: 'todoist-88b0e',
-    storageBucket: 'todoist-88b0e.firebasestorage.app',
-    androidClientId:
-        '498694689943-40h98qpqjln5chtfvmrg5f6ibv52vs30.apps.googleusercontent.com',
-    iosClientId:
-        '498694689943-m2h0lae8hob5l2g95bjkeg047k69nb5u.apps.googleusercontent.com',
-    iosBundleId: 'com.viren.todoist',
+    apiKey: 'AIzaSyDo4e8160N0a3b7SD9Z60e_fwEUz06yifM',
+    appId: '1:528358178403:ios:61d190211200695ce7c256',
+    messagingSenderId: '528358178403',
+    projectId: 'todoeasy-95dd4',
+    storageBucket: 'todoeasy-95dd4.firebasestorage.app',
+    iosBundleId: 'com.viren.todoeasy',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAq1ZC051zmst0jGwHVITIrKrns-OPOPdk',
+    appId: '1:528358178403:web:065a9ae41cdefb3ee7c256',
+    messagingSenderId: '528358178403',
+    projectId: 'todoeasy-95dd4',
+    authDomain: 'todoeasy-95dd4.firebaseapp.com',
+    storageBucket: 'todoeasy-95dd4.firebasestorage.app',
+    measurementId: 'G-82LD7BDS2X',
   );
 }
